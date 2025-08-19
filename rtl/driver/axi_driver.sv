@@ -51,6 +51,16 @@ module axi_driver
     input wire                           M_AXI_RLAST,
     output wire                          M_AXI_RREADY
 
+    // front-end, external interface
+    input  logic                         req_valid, req_is_write,
+    input  logic [AXI_ADDR_WIDTH-1:0]    req_addr,
+    input  logic [7:0]                   req_len,
+    input  logic [2:0]                   req_size,
+    input  logic [AXI_DATA_WIDTH-1:0]    req_wdata,
+    input  logic [AXI_DATA_WIDTH/8-1:0]  req_wstrb,
+    output logic                         req_ready 
+
+
     );
 
 
@@ -65,51 +75,10 @@ module axi_driver
    assign M_AXI_AWBURST = 2'b01;        // INCR burst (typical)
    assign M_AXI_ARBURST = 2'b01;
 
-   // aw
-   logic [AXI_ADDR_WIDTH-1:0]          axi_awaddr;
-   logic                               axi_awvalid;
 
-   // assign outputs to top level signals
-   assign M_AXI_AWADDR = axi_awaddr;
-   assign M_AXI_AWVALID = axi_awvalid;
-
-   // w
-   logic [AXI_DATA_WIDTH-1:0]          axi_wdata;
-   logic [AXI_DATA_WIDTH/8-1:0]        axi_wstrb;
-   logic                               axi_wvalid;
-// logic                               axi_awid;
-   logic                               axi_wlast;
-   assign M_AXI_WSTRB = axi_wstrb;
-   assign M_AXI_WVALID = axi_wvalid;
-   assign M_AXI_WDATA = axi_wdata;
-// assign M_AXI_AWID = axi_awid;
-   assign M_AXI_WLAST = axi_wlast;
    assign M_AXI_AWID = 'b0;
-
-   // b
-   logic                               axi_bready;
-   logic                               axi_berror;
-// logic                               axi_bid;
-   assign M_AXI_BREADY = axi_bready;
-// assign M_AXI_BID = axi_bid;
    assign M_AXI_BID = 'b0;
-
-   // ar
-   logic [AXI_ADDR_WIDTH-1 0]          axi_araddr;
-   logic                               axi_arvalid;
-// logic                               axi_arid;
-   assign M_AXI_ARADDR = axi_araddr;
-   assign M_AXI_ARVALID = axi_arvalid;
-// assign M_AXI_ARID = axi_arid;
    assign M_AXI_ARID = 'b0;  
-
-
-   // r
-   logic [AXI_DATA_WIDTH-1:0]          axi_rready;
-   logic                               axi_rerror;
-// logic                               axi_rid;
-   assign M_AXI_RREADY = axi_rready;
-// assign M_AXI_RID = axi_rid;
    assign M_AXI_RID = 'b0;
 
 
@@ -123,32 +92,39 @@ module axi_driver
 
    logic stall_active;
 
-   // Write interfaces
+
    logic                                 init_transaction_i;
 
-   // edge detect on input_fsync
+
    always_ff @(posedge M_AXI_ACLK)
      begin
         init_transaction_i <= init_transaction;
      end
 
-   // This is how we do an edge detect.
-   // Init WAS low (the delayed version has ~) and NOW it is NOT (so it went from 0 to 1).
-   // This is a 1cc edge detect
+
    logic start;
    assign start = (init_transaction & ~init_transaction_i) ? 1 : 0;
+
+   logic                                 req_latched_valid;
+   logic [AXI_ADDR_WIDTH-1:0]            req_latched_addr;
+   logic [7:0]                           req_latched_len;
+   logic [2:0]                           req_latched_size;
+   logic [AXI_DATA_WIDTH-1:0]            req_latched_wdata;
+   logic [AXI_DATA_WIDTH/8-1:0]          req_latched_wstrb;
+
 
 
    logic                                 in_flight;
    logic                                 current_id = 0;
-   logic                                 saved_addr;
-   logic                                 saved_len;
-   logic                                 saved_size;
-   logic                                 beats_remaining;
-   logic                                 beat_index;
+   logic [AXI_ADDR_WIDTH-1:0]            saved_addr;
+   logic [7:0]                           saved_len;
+   logic [2:0]                           saved_size;
+   logic [AXI_DATA_WIDTH-1:0]            saved_wdata;
+   logic [AXI_DATA_WIDTH/8-1:0]          saved_wstrb;
+
+
    logic                                 data_ptr;
-   logic                                 line_buffer;
-   logic                                 req_latched;                               
+   logic                                 line_buffer;                              
 
 
    // State machine
@@ -156,6 +132,31 @@ module axi_driver
    typedef enum {IDLE, SEND_AW, SEND_W, SEND_AR, WAIT_RESP}  my_state;
 
    my_state current_state, next_state;
+
+   assign req_ready = (state == IDLE) && !in_flight;
+
+   always_ff @(posedge M_AXI_ACLK or negedge M_AXI_ARESETN) begin
+
+      if(!M_AXI_ARESETN) begin
+         req_latched_valid = 1'b0;
+      end else begin
+
+      if(req_valid & req_ready) begin
+         req_latched_valid   <= 1'b1;
+         req_latched_addr    <= req_addr;
+         req_latched_len     <= req_len;
+         req_latched_size    <= req_size;
+         req_latcehd_iswrite <= req_is_write;
+         req_latched_strobe  <= req_wstrb
+         req_latched_data    <= req_wdata;
+      end
+
+      if (write_done | read_done)
+         req_latched_valid <= 1'b0;
+      end
+   end
+
+
 
    always_comb begin // computing the next state
       next_state = state; 
@@ -170,27 +171,59 @@ module axi_driver
    case (state)
       IDLE: begin
          if(req_valid && in_flight) begin
+            
             if(req_is_write) begin
                M_AXI_VALID = 1;
                M_AXI_AWADDR = req_addr;
                M_AXI_AWLEN = req_len;
                M_AXI_AWSIZE = req_size;
                next_state = SEND_AW;
+            
             end else begin
                M_AXI_ARVALID = 1;
-               M_AXI_ARADDR = req_addr;
-               M_AXI
+               M_AXI_ARADDR  = req_addr;
+               M_AXI_AWLEN   = req_len;
+               M_AXI_ARSIZE  = req_size;
+               next_state = SEND_AR;
             end
+         end
+      end
 
+      SEND_AW: begin
+         M_AXI_AWVALID = 1;
+         if(M_AXI_AWREADY) begin
+            next_state =  SEND_W;
+         end
+      end
 
+      SEND_W: begin
+         M_AXI_VALID = 1;
+         M_AXI_WLAST = 1;
+         if (M_AXI_WVALID && M_AXI_WREADY) 
+            next_state = WAIT_RESP;
+      end
+
+      SEND_AR: begin
+         M_AXI_ARVALID = 1;
+         if(M_AXI_ARREADY && M_AXI_ARVALID) 
+            next_state = WAIT_RESP;
+      end
+
+      WAIT_RESP: begin
+         if(req_is_write) begin
+            if(M_AXI_BVALID && (BRESP == 3'b000))
+               next_state = IDLE;   
+         end else begin
+            if (M_AXI_RVALID && M_AXI_RLAST)
+               next_state = IDLE;
+         end
+      end
+   
    endcase
    end
 
    always_ff @(posedge M_AXI_CLK or negedge M_AXI_ARESTEN) begin
 
    end
-
-  
-
 
 endmodule
