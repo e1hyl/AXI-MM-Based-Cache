@@ -77,9 +77,9 @@ module axi_driver
 
 
    assign M_AXI_AWID = 'b0;
-   assign M_AXI_BID = 'b0;
+   assign M_AXI_BID  = 'b0;
    assign M_AXI_ARID = 'b0;  
-   assign M_AXI_RID = 'b0;
+   assign M_AXI_RID  = 'b0;
 
 
   
@@ -192,6 +192,7 @@ module axi_driver
       SEND_AW: begin
          M_AXI_AWVALID = 1;
          if(M_AXI_AWREADY) begin
+            saved_addr = req_latched_addr;
             next_state =  SEND_W;
          end
       end
@@ -199,13 +200,17 @@ module axi_driver
       SEND_W: begin
          M_AXI_VALID = 1;
          M_AXI_WLAST = 1;
-         if (M_AXI_WVALID && M_AXI_WREADY) 
-            next_state = WAIT_RESP;
+         if (M_AXI_WVALID && M_AXI_WREADY) begin
+            next_state  = WAIT_RESP;
+            saved_wdata = req_latched_addr;
+            saved_wstrb = req_latched_strobe;
+         end
       end
 
       SEND_AR: begin
          M_AXI_ARVALID = 1;
          if(M_AXI_ARREADY && M_AXI_ARVALID) 
+            saved_addr = req_latched_addr;
             next_state = WAIT_RESP;
       end
 
@@ -227,5 +232,11 @@ module axi_driver
    always_ff @(posedge M_AXI_CLK or negedge M_AXI_ARESTEN) begin
 
    end
+
+
+   assign M_AXI_WDATA = saved_wdata;
+   assign M_AXI_WSTRB = saved_wstrb;
+   assign M_AXI_WVALID = (state == SEND_W) && (beats_remaining > 0);
+   assign M_AXI_WLAST  = (beats_remaining == 1);
 
 endmodule
