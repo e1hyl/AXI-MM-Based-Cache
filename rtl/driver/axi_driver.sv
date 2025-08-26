@@ -245,10 +245,6 @@ always_ff @(posedge clk or negedge rst_n) begin
 
   end
 end
-
-   assign M_AXI_WDATA  = saved_wdata;
-   assign M_AXI_WSTRB  = req_latched_data;
-   assign M_AXI_WVALID = (state == SEND_W);
    
 
 endmodule
