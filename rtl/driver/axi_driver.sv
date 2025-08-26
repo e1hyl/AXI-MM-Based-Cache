@@ -69,8 +69,6 @@ module axi_driver
    localparam [2:0] SIZE_8B = 3'd3; 
    localparam [1:0] BURST_INCR = 2'b01;
 
-   localparam line_depth      = 2;
-
    logic                                  req_latched_valid;
    logic                                  req_latched_is_write;
    logic [AXI_ADDR_WIDTH-1:0]             req_latched_addr;
@@ -91,12 +89,7 @@ module axi_driver
    assign M_AXI_ARBURST = BURST_INCR;
    assign M_AXI_AWID    = '0;
    assign M_AXI_ARID    = '0;  
-   assign M_AXI_WLAST   = 1;
-
-
-
-
-   logic [AXI_DATA_WIDTH-1:0]             line_buffer[line_depth-1:0];                              
+   assign M_AXI_WLAST   = 1;                
 
 
    typedef enum logic [2:0] {
