@@ -4,14 +4,14 @@ module axi_driver
   #(
    parameter integer AXI_ADDR_WIDTH  = 32,
    parameter integer AXI_DATA_WIDTH  = 64,
-   parameter integer AXI_ID_WIDTH    = 4,
+   parameter integer AXI_ID_WIDTH    = 4
    )
    (
  
-   input logic                          clk,
-   input logic                          rst_n,
+   input logic                           clk,
+   input logic                           rst_n,
     
-   input  wire                           req_valid,
+   input  logic                          req_valid,
    output logic                          req_ready,
    input  wire                           req_is_write, 
    input  wire [AXI_ADDR_WIDTH-1:0]      req_addr,
@@ -63,10 +63,10 @@ module axi_driver
     );
 
 
-   localparam BYTES_PER_BEAT  = AXI_DATA_WIDTH/8;
-   localparam [2:0] AWSIZE_8B =  $clog2(BYTES_PER_BEAT); 
+   localparam BYTES_PER_BEAT   = AXI_DATA_WIDTH/8;
+   localparam [2:0] AWSIZE_8B  = $clog2(BYTES_PER_BEAT); 
    
-   localparam [2:0] SIZE_8B = 3'd3; 
+   localparam [2:0] SIZE_8B    = 3'd3; 
    localparam [1:0] BURST_INCR = 2'b01;
 
    logic                                  req_latched_valid;
@@ -78,6 +78,7 @@ module axi_driver
    logic [AXI_DATA_WIDTH/8-1:0]           req_latched_wstrb;
    
    logic                                  in_flight;
+   logic                                  complete_event;
 
 
    // assignments for constants
@@ -89,7 +90,7 @@ module axi_driver
    assign M_AXI_ARBURST = BURST_INCR;
    assign M_AXI_AWID    = '0;
    assign M_AXI_ARID    = '0;  
-   assign M_AXI_WLAST   = 1;                
+   assign M_AXI_WLAST   = 1'b1;     
 
 
    typedef enum logic [2:0] {
@@ -102,23 +103,21 @@ module axi_driver
 
    my_state state, next_state;
 
-   assign req_ready = (state == IDLE) && !in_flight;
 
    always_comb begin 
       next_state = state; 
 
       M_AXI_AWVALID = 1'b0;
       M_AXI_WVALID  = 1'b0;
-      M_AXI_WLAST   = 1'b0;
       M_AXI_ARVALID = 1'b0;
       M_AXI_RREADY  = 1'b0;   
       M_AXI_BREADY  = 1'b0;
-      M_AXI_WDATA   = '0';
+      M_AXI_WDATA   = '0;
       M_AXI_WSTRB   = '0;
       M_AXI_BREADY  = 1'b0;
       M_AXI_RREADY  = 1'b0;
 
-      req_ready  = (state == S_IDLE) && !req_latched_valid && !in_flight;
+      req_ready  = (state == IDLE) && !req_latched_valid && !in_flight;
 
       resp_valid = 1'b0;
       resp_data  = '0;  
@@ -145,9 +144,9 @@ module axi_driver
          end
 
          SEND_W: begin
-            M_AXI_VALID = 1'b1;
+            M_AXI_WVALID = 1'b1;
             M_AXI_WDATA = req_latched_wdata;
-            M_AXI_WSTRB = req_latched_strb;
+            M_AXI_WSTRB = req_latched_wstrb;
             if (M_AXI_WVALID && M_AXI_WREADY) begin
                next_state  = WAIT_RESP;
             end
@@ -175,7 +174,7 @@ module axi_driver
             end
          end
          
-         default: next_state = S_IDLE;
+         default: next_state = IDLE;
 
       endcase
    end
@@ -190,8 +189,8 @@ always_ff @(posedge clk or negedge rst_n) begin
       req_latched_wdata    <= '0;
       req_latched_wstrb    <= '0;
       complete_event       <= 1'b0;
-      req_valid            <= 1'b0;
       resp_data            <= '0;
+      resp_valid           <= 1'b0;
       in_flight            <= 1'b0;
 
    end else begin
@@ -202,8 +201,8 @@ always_ff @(posedge clk or negedge rst_n) begin
    if(req_valid & req_ready) begin
       req_latched_valid    <= 1'b1;
       req_latched_addr     <= req_addr;
-      req_latcehd_is_write <= req_is_write;
-      req_latched_wstrbe   <= req_wstrb
+      req_latched_is_write <= req_is_write;
+      req_latched_wstrb    <= req_wstrb;
       req_latched_wdata    <= req_wdata;
    end
 
@@ -217,11 +216,11 @@ always_ff @(posedge clk or negedge rst_n) begin
 
  
    if (M_AXI_BVALID && M_AXI_BREADY) begin
-      req_latched_valid  <= 1'b0;
-      in_flight          <= 1'b0;
-      complete_event     <= 1'b1;
-      resp_valid         <= 1'b1;   
-      resp_data          <= '0;    
+      req_latched_valid    <= 1'b0;
+      in_flight            <= 1'b0;
+      complete_event       <= 1'b1;
+      resp_valid           <= 1'b1;   
+      resp_data            <= '0;    
    end
 
 
