@@ -63,8 +63,8 @@ module axi_driver
     );
 
 
-   localparam BYTES_PER_BEAT   = AXI_DATA_WIDTH/8;
-   localparam [2:0] AWSIZE_8B  = $clog2(BYTES_PER_BEAT); 
+   // localparam BYTES_PER_BEAT   = AXI_DATA_WIDTH/8;
+   // localparam [2:0] AWSIZE_8B  = $clog2(BYTES_PER_BEAT); 
    
    localparam [2:0] SIZE_8B    = 3'd3; 
    localparam [1:0] BURST_INCR = 2'b01;
