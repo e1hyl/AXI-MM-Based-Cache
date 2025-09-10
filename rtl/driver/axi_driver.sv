@@ -10,16 +10,42 @@ module axi_driver
  
    input logic                           clk,
    input logic                           rst_n,
-    
-   input  logic                          req_valid,
-   output logic                          req_ready,
-   input  wire                           req_is_write, 
-   input  wire [AXI_ADDR_WIDTH-1:0]      req_addr,
-   input  wire [AXI_DATA_WIDTH-1:0]      req_wdata,     
-   input  wire [AXI_DATA_WIDTH/8-1:0]    req_wstrb,   
 
-   output logic                          resp_valid,
-   output logic [AXI_DATA_WIDTH-1:0]     resp_data,
+   input  logic [AXI_ADDR_WIDTH-1:0]     TB_AXI_AWADDR,
+   input  logic                          TB_AXI_AWVALID,
+   input  logic [AXI_ID_WIDTH-1:0]       TB_AXI_AWID,
+   input  logic [1:0]                    TB_AXI_AWBURST,
+   input  logic [2:0]                    TB_AXI_AWSIZE,
+   input  logic [7:0]                    TB_AXI_AWLEN,
+   output logic                          TB_AXI_AWREADY,
+
+   input  logic [AXI_DATA_WIDTH-1:0]     TB_AXI_WDATA,
+   input  logic [AXI_DATA_WIDTH/8-1:0]   TB_AXI_WSTRB,
+   input  logic                          TB_AXI_WVALID,
+   input  logic                          TB_AXI_WLAST,
+   output logic                          TB_AXI_WREADY,
+
+   output logic [1:0]                    TB_AXI_BRESP,
+   output logic                          TB_AXI_BVALID,
+   output logic [AXI_ID_WIDTH-1:0]       TB_AXI_BID,
+   input  logic                          TB_AXI_BREADY,
+
+   input  logic [AXI_ADDR_WIDTH-1:0]     TB_AXI_ARADDR,
+   input  logic                          TB_AXI_ARVALID,
+   input  logic [AXI_ID_WIDTH-1:0]       TB_AXI_ARID,
+   input  logic [1:0]                    TB_AXI_ARBURST,
+   input  logic [2:0]                    TB_AXI_ARSIZE,
+   input  logic [7:0]                    TB_AXI_ARLEN,
+   output logic                          TB_AXI_ARREADY,
+
+   output logic [AXI_DATA_WIDTH-1:0]     TB_AXI_RDATA,
+   output logic [1:0]                    TB_AXI_RRESP,
+   output logic                          TB_AXI_RVALID,
+   output logic [AXI_ID_WIDTH-1:0]       TB_AXI_RID,
+   output logic                          TB_AXI_RLAST,
+   input  logic                          TB_AXI_RREADY
+
+// ----
 
    // aw
    output logic [AXI_ADDR_WIDTH-1:0]     M_AXI_AWADDR,
@@ -37,7 +63,7 @@ module axi_driver
    output logic                          M_AXI_WLAST,
    input  logic                          M_AXI_WREADY,
 
-   // b resp
+   // b 
    input  logic [1:0]                    M_AXI_BRESP,
    input  logic                          M_AXI_BVALID,
    input  logic [AXI_ID_WIDTH-1:0]       M_AXI_BID,
@@ -60,25 +86,36 @@ module axi_driver
    input  logic                          M_AXI_RLAST,
    output logic                          M_AXI_RREADY
 
-    );
+   );
 
-
-   // localparam BYTES_PER_BEAT   = AXI_DATA_WIDTH/8;
-   // localparam [2:0] AWSIZE_8B  = $clog2(BYTES_PER_BEAT); 
-   
    localparam [2:0] SIZE_8B    = 3'd3; 
    localparam [1:0] BURST_INCR = 2'b01;
 
-   logic                                  req_latched_valid;
-   logic                                  req_latched_is_write;
-   logic [AXI_ADDR_WIDTH-1:0]             req_latched_addr;
-   logic [7:0]                            req_latched_len;
-   logic [2:0]                            req_latched_size;
-   logic [AXI_DATA_WIDTH-1:0]             req_latched_wdata;
-   logic [AXI_DATA_WIDTH/8-1:0]           req_latched_wstrb;
-   
-   logic                                  in_flight;
-   logic                                  complete_event;
+   logic [AXI_ADDR_WIDTH-1:0]     latched_awaddr;
+   logic                          latched_awvalid;
+   logic [AXI_ID_WIDTH-1:0]       latched_awid;
+   logic [1:0]                    latched_awburst;
+   logic [2:0]                    latched_awsize;
+   logic [7:0]                    latched_awlen;
+
+   logic [AXI_DATA_WIDTH-1:0]     latched_wdata;
+   logic [AXI_DATA_WIDTH/8-1:0]   latched_wstrb;
+   logic                          latched_wvalid;
+   logic                          latched_wlast;
+
+   logic                          latched_bready;
+
+   logic [AXI_ADDR_WIDTH-1:0]     latched_araddr;
+   logic                          latched_arvalid;
+   logic [AXI_ID_WIDTH-1:0]       latched_arid;
+   logic [1:0]                    latched_arburst;
+   logic [2:0]                    latched_arsize;
+   logic [7:0]                    latched_arlen;
+
+   logic                          latched_rready;
+
+   logic                          req_ready;
+
 
 
    // assignments for constants
@@ -88,8 +125,6 @@ module axi_driver
    assign M_AXI_ARLEN   = 8'd0;
    assign M_AXI_AWBURST = BURST_INCR;   // INCR burst
    assign M_AXI_ARBURST = BURST_INCR;
-   assign M_AXI_AWID    = '0;
-   assign M_AXI_ARID    = '0;  
    assign M_AXI_WLAST   = 1'b1;     
 
 
@@ -117,7 +152,7 @@ module axi_driver
       M_AXI_BREADY  = 1'b0;
       M_AXI_RREADY  = 1'b0;
 
-      req_ready  = (state == IDLE) && !req_latched_valid && !in_flight;
+      req_ready  = (state == IDLE) && !latched_awvalid && !latched_arvalid && !in_flight;
 
       resp_valid = 1'b0;
       resp_data  = '0;  
@@ -125,19 +160,17 @@ module axi_driver
       case (state)
 
          IDLE: begin
-            if(req_latched_valid) begin
-               
-               if(req_latched_is_write)
-                  next_state = SEND_AW;
-               else  
-                  next_state = SEND_AR;
-
-               end
+            if(latched_awvalid) begin               
+               next_state = SEND_AW;
+            else if(latched_arvalid)
+               next_state = SEND_AR;
             end
+         end
 
          SEND_AW: begin
             M_AXI_AWVALID = 1'b1;
-            M_AXI_AWADDR  = req_latched_addr;
+            M_AXI_AWADDR  = latched_awaddr;
+            M_AXI_AWID    = latched_awid;
             if(M_AXI_AWREADY) begin
                next_state =  SEND_W;
             end
@@ -145,8 +178,8 @@ module axi_driver
 
          SEND_W: begin
             M_AXI_WVALID = 1'b1;
-            M_AXI_WDATA = req_latched_wdata;
-            M_AXI_WSTRB = req_latched_wstrb;
+            M_AXI_WDATA = latched_wdata;
+            M_AXI_WSTRB = latched_wstrb;
             if (M_AXI_WVALID && M_AXI_WREADY) begin
                next_state  = WAIT_RESP;
             end
@@ -154,13 +187,14 @@ module axi_driver
 
          SEND_AR: begin
             M_AXI_ARVALID = 1'b1;
-            M_AXI_ARADDR  = req_latched_addr;
+            M_AXI_ARADDR  = latched_araddr;
+            M_AXI_ARID    = latched_arid;
             if(M_AXI_ARREADY) 
                next_state = WAIT_RESP;
          end
 
          WAIT_RESP: begin
-            if(req_is_write) begin
+            if(latched_awvalid) begin
                M_AXI_BREADY = 1'b1;
                if(M_AXI_BVALID)
                   next_state = IDLE;   
@@ -182,16 +216,28 @@ module axi_driver
 
 always_ff @(posedge clk or negedge rst_n) begin
   if (!rst_n) begin
-      state                <= IDLE;
-      req_latched_valid    <= 1'b0;
-      req_latched_is_write <= 1'b0;
-      req_latched_addr     <= '0;
-      req_latched_wdata    <= '0;
-      req_latched_wstrb    <= '0;
-      complete_event       <= 1'b0;
-      resp_data            <= '0;
-      resp_valid           <= 1'b0;
-      in_flight            <= 1'b0;
+      state               <= IDLE;
+      latched_awaddr      <= 1'b0;
+      latched_awvalid     <= 1'b0;
+      latched_awid        <= 1'b0;
+      latched_awbur       <= 1'b0;
+      latched_awsiz       <= 1'b0;
+      latched_awlen       <= 1'b0;
+
+      latched_wdata       <= 1'b0;
+      latched_wstrb       <= 1'b0;
+      latched_wvalid      <= 1'b0;
+      latched_wlast       <= 1'b0;
+
+      latched_bready      <= 1'b0;
+
+      latched_aradd       <= 1'b0;
+      latched_arvalid     <= 1'b0;
+      latched_arid        <= 1'b0;
+      latched_arburst     <= 1'b0;
+      latched_arsize      <= 1'b0;
+      latched_arlen       <= 1'b0;
+
 
    end else begin
       state                <= next_state;
