@@ -39,11 +39,10 @@ module axi_driver
    output logic                          TB_AXI_ARREADY,
 
    output logic [AXI_DATA_WIDTH-1:0]     TB_AXI_RDATA,
-   output logic [1:0]                    TB_AXI_RRESP,
    output logic                          TB_AXI_RVALID,
    output logic [AXI_ID_WIDTH-1:0]       TB_AXI_RID,
    output logic                          TB_AXI_RLAST,
-   input  logic                          TB_AXI_RREADY
+   //input  logic                          TB_AXI_RREADY,
 
 // ----
 
@@ -80,7 +79,6 @@ module axi_driver
 
    // r
    input  logic [AXI_DATA_WIDTH-1:0]     M_AXI_RDATA,
-   input  logic [1:0]                    M_AXI_RRESP,
    input  logic                          M_AXI_RVALID,
    input  logic [AXI_ID_WIDTH-1:0]       M_AXI_RID,
    input  logic                          M_AXI_RLAST,
@@ -115,17 +113,17 @@ module axi_driver
    logic                          latched_rready;
 
    logic                          req_ready;
-
+   logic [AXI_DATA_WIDTH-1:0]     resp_data;
 
 
    // assignments for constants
-   assign M_AXI_AWSIZE  = SIZE_8B;      // 8 bytes per beat
-   assign M_AXI_ARSIZE  = SIZE_8B;
-   assign M_AXI_AWLEN   = 8'd0;         // AWLEN = beats - 1 -> 0 means 1 beat
-   assign M_AXI_ARLEN   = 8'd0;
-   assign M_AXI_AWBURST = BURST_INCR;   // INCR burst
-   assign M_AXI_ARBURST = BURST_INCR;
-   assign M_AXI_WLAST   = 1'b1;     
+   //assign M_AXI_AWSIZE  = SIZE_8B;      // 8 bytes per beat
+   //assign M_AXI_ARSIZE  = SIZE_8B;
+   //assign M_AXI_AWLEN   = 8'd0;         // AWLEN = beats - 1 -> 0 means 1 beat
+   //assign M_AXI_ARLEN   = 8'd0;
+   //assign M_AXI_AWBURST = BURST_INCR;   // INCR burst
+   //assign M_AXI_ARBURST = BURST_INCR;
+   //assign M_AXI_WLAST   = 1'b1;     
 
 
    typedef enum logic [2:0] {
@@ -152,50 +150,52 @@ module axi_driver
       M_AXI_BREADY  = 1'b0;
       M_AXI_RREADY  = 1'b0;
 
-      req_ready  = (state == IDLE) && !latched_awvalid && !latched_arvalid && !in_flight;
+      req_ready  = (state == IDLE) && !latched_awvalid && !latched_arvalid;
 
-      resp_valid = 1'b0;
-      resp_data  = '0;  
-
-      case (state)
+        case (state)
 
          IDLE: begin
-            if(latched_awvalid) begin               
+            if(latched_awvalid)                
                next_state = SEND_AW;
             else if(latched_arvalid)
                next_state = SEND_AR;
-            end
          end
 
          SEND_AW: begin
-            M_AXI_AWVALID = 1'b1;
-            M_AXI_AWADDR  = latched_awaddr;
-            M_AXI_AWID    = latched_awid;
+            TB_AXI_AWREADY = 1'b1; 
+            M_AXI_AWVALID  = 1'b1;
+            M_AXI_AWADDR   = latched_awaddr;
+            M_AXI_AWID     = latched_awid;
             if(M_AXI_AWREADY) begin
                next_state =  SEND_W;
             end
          end
 
          SEND_W: begin
-            M_AXI_WVALID = 1'b1;
-            M_AXI_WDATA = latched_wdata;
-            M_AXI_WSTRB = latched_wstrb;
+            TB_AXI_WREADY = 1'b1; 
+            M_AXI_WVALID  = 1'b1;
+            M_AXI_WDATA   = latched_wdata;
+            M_AXI_WSTRB   = latched_wstrb;
             if (M_AXI_WVALID && M_AXI_WREADY) begin
                next_state  = WAIT_RESP;
             end
          end
 
          SEND_AR: begin
-            M_AXI_ARVALID = 1'b1;
-            M_AXI_ARADDR  = latched_araddr;
-            M_AXI_ARID    = latched_arid;
+            TB_AXI_ARREADY = 1'b1;
+            M_AXI_ARVALID  = 1'b1;
+            M_AXI_ARADDR   = latched_araddr;
+            M_AXI_ARID     = latched_arid;
             if(M_AXI_ARREADY) 
                next_state = WAIT_RESP;
          end
 
          WAIT_RESP: begin
             if(latched_awvalid) begin
-               M_AXI_BREADY = 1'b1;
+               M_AXI_BREADY  = 1'b1;
+               TB_AXI_BRESP  = M_AXI_BRESP;
+               TB_AXI_BVALID = M_AXI_BVALID;
+               TB_AXI_BID    = M_AXI_BID; 
                if(M_AXI_BVALID)
                   next_state = IDLE;   
             end 
@@ -220,8 +220,8 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_awaddr      <= 1'b0;
       latched_awvalid     <= 1'b0;
       latched_awid        <= 1'b0;
-      latched_awbur       <= 1'b0;
-      latched_awsiz       <= 1'b0;
+      latched_awburst     <= 1'b0;
+      latched_awsize      <= 1'b0;
       latched_awlen       <= 1'b0;
 
       latched_wdata       <= 1'b0;
@@ -231,7 +231,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 
       latched_bready      <= 1'b0;
 
-      latched_aradd       <= 1'b0;
+      latched_araddr      <= 1'b0;
       latched_arvalid     <= 1'b0;
       latched_arid        <= 1'b0;
       latched_arburst     <= 1'b0;
@@ -240,48 +240,51 @@ always_ff @(posedge clk or negedge rst_n) begin
 
 
    end else begin
-      state                <= next_state;
-      complete_event       <= 1'b0;
-      resp_valid           <= 1'b0;
+      state               <= next_state;
 
-   if(req_valid & req_ready) begin
-      req_latched_valid    <= 1'b1;
-      req_latched_addr     <= req_addr;
-      req_latched_is_write <= req_is_write;
-      req_latched_wstrb    <= req_wstrb;
-      req_latched_wdata    <= req_wdata;
+   if(TB_AXI_AWREADY && req_ready) begin
+      latched_awvalid     <= 1'b1;
+      latched_awaddr      <= TB_AXI_AWADDR;
+      latched_awid        <= TB_AXI_AWID;
+      latched_awburst     <= TB_AXI_AWBURST;
+      latched_awsize      <= TB_AXI_AWSIZE;
+      latched_awlen       <= TB_AXI_AWLEN;
+      
+      latched_wdata       <= TB_AXI_WDATA;
+      latched_wstrb       <= TB_AXI_WSTRB;
+      latched_wvalid      <= TB_AXI_WVALID;
+      latched_wlast       <= TB_AXI_WLAST;
+      
+      latched_bready      <= TB_AXI_BREADY;
    end
 
-   if (state == SEND_AW && M_AXI_AWVALID && M_AXI_AWREADY) begin
-      in_flight       <= 1;
+   else begin
+      latched_arvalid     <= 1'b1;
+      latched_araddr      <= TB_AXI_ARADDR;
+      latched_arid        <= TB_AXI_ARID;
+      latched_arburst     <= TB_AXI_ARBURST;
+      latched_arsize      <= TB_AXI_ARSIZE;
+      latched_arlen       <= TB_AXI_ARLEN;
    end
 
-    if (state == SEND_AR && M_AXI_ARVALID && M_AXI_ARREADY) begin
-      in_flight  <= 1;
-    end
 
- 
    if (M_AXI_BVALID && M_AXI_BREADY) begin
-      req_latched_valid    <= 1'b0;
-      in_flight            <= 1'b0;
-      complete_event       <= 1'b1;
-      resp_valid           <= 1'b1;   
-      resp_data            <= '0;    
+      if(M_AXI_BID == latched_awid) begin 
+         latched_awvalid      <= 1'b0;
+         latched_wvalid       <= 1'b0; 
+      end  
    end
 
 
    if (M_AXI_RVALID && M_AXI_RREADY) begin
       resp_data <= M_AXI_RDATA;
-      if (M_AXI_RLAST) begin
-         req_latched_valid <= 1'b0;
-         in_flight         <= 1'b0;
-         complete_event    <= 1'b1;
-         resp_valid        <= 1'b1;
+      if (M_AXI_RLAST && M_AXI_RID == latched_arid) begin
+         latched_arvalid <= 1'b0;
       end
    end
 
-
   end
+
 end
    
 
