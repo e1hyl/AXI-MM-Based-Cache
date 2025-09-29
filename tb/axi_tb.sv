@@ -117,6 +117,8 @@ module axi_tb(
         #10 rst_n = 1;
     end
 
+// this is a  comment that should not exist probably
+
    always_ff @(posedge clk or negedge rst_n) begin
         
         case(state)
