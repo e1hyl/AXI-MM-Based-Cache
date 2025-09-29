@@ -112,6 +112,7 @@ module axi_driver
 
    logic                          latched_rready;
 
+   logic                          complete_request;
 
 always_ff @(posedge clk or negedge rst_n) begin
   if (!rst_n) begin
@@ -138,10 +139,9 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_arlen       <= 1'b0;
 
 
-   end else begin
-      state               <= next_state;
+   end 
 
-   if(TB_AXI_AWREADY && req_ready) begin
+   if(TB_AXI_AWVALID) begin
       latched_awvalid     <= 1'b1;
       latched_awaddr      <= TB_AXI_AWADDR;
       latched_awid        <= TB_AXI_AWID;
@@ -157,7 +157,7 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_bready      <= TB_AXI_BREADY;
    end
 
-   else begin
+   else if (TB_AXI_ARVALID) begin
       latched_arvalid     <= 1'b1;
       latched_araddr      <= TB_AXI_ARADDR;
       latched_arid        <= TB_AXI_ARID;
@@ -166,11 +166,9 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_arlen       <= TB_AXI_ARLEN;
    end
 
-
    if (M_AXI_BVALID && M_AXI_BREADY) begin
       if(M_AXI_BID == latched_awid) begin 
-         latched_awvalid      <= 1'b0;
-         latched_wvalid       <= 1'b0; 
+         complete_request = 1'b1;
       end  
    end
 
@@ -178,20 +176,31 @@ always_ff @(posedge clk or negedge rst_n) begin
    if (M_AXI_RVALID && M_AXI_RREADY) begin
       resp_data <= M_AXI_RDATA;
       if (M_AXI_RLAST && M_AXI_RID == latched_arid) begin
-         latched_arvalid <= 1'b0;
+         complete_request = 1'b1;
       end
    end
 
   end
 
-end
-   
-
 assign M_AXI_AWADDR = latched_awaddr; 
 assign M_AXI_AWVALID = latched_awvalid;
-// ...
+assign M_AXI_AWID = latched_awid;
+assign M_AXI_AWBURST = latched_awburst;
+assign M_AXI_AWSIZE = latched_awsize;
+assign M_AXI_AWLEN = latched_awlen;
+
 assign M_AXI_WDATA = latched_wdata;
+assign M_AXI_WSTRB = latched_wstrb;
+assign M_AXI_WVALID = latched_awvalid;
+assign M_AXI_WLAST = latched_wlast;
 
+assign M_AXI_BREADY = latched_bready;
 
+assign M_AXI_ARADDR = latched_araddr;
+assign M_AXI_ARVALID = latched_arvalid;
+assign M_AXI_ARID = latched_arid;
+assign M_AXI_ARBURST = latched_arburst;
+assign M_AXI_ARSIZE = latched_arsize;
+assign M_AXI_ARLEN = latched_arlen;
 
 endmodule
