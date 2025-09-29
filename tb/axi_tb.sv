@@ -92,8 +92,7 @@ module axi_tb(
         SEND_AW, 
         SEND_W, 
         SEND_AR, 
-        WAIT_RESP
-        } my_state;
+    } my_state;
 
     my_state state, next_state;
 
@@ -112,7 +111,14 @@ module axi_tb(
     localparam [2:0] SIZE_8B    = 3'd3; 
     localparam [1:0] BURST_INCR = 2'b01;
 
+    initial begin
+        rst_n = 0;
+
+        #10 rst_n = 1;
+    end
+
    always_ff @(posedge clk or negedge rst_n) begin
+        
         case(state)
             IDLE: begin
                 next_state = SEND_AW; 
@@ -126,8 +132,10 @@ module axi_tb(
                     TB_AXI_AWSIZE <= SIZE_8B;
                     TB_AXI_AWBURST <= BURST_INC;
                     TB_AXI_AWLEN <= 8'd0;
+                    aw_addr_count <= aw_addr_count + 4; 
                 end
-                aw_addr_count = aw_addr_count + 4; 
+                else 
+                    next_state = SEND_AR;
                 next_state = SEND_W;
             end
 
@@ -136,7 +144,7 @@ module axi_tb(
                 TB_AXI_WSTRB <= 8'b11111111;
                 TB_AXI_WVALID <= 1'b1;
                 TB_AXI_WLAST <= 1'b1;
-                w_data_count = w_data_count + 4; 
+                w_data_count <= w_data_count + 4; 
                 next_state = SEND_AR;
             end
 
@@ -148,16 +156,15 @@ module axi_tb(
                     TB_AXI_ARSIZE <= SIZE_8B;
                     TB_AXI_ARBURST <= BURST_INC;
                     TB_AXI_ARLEN <= 8'd0;
+                    ar_addr_count <= ar_addr_count + 4; 
                 end
-                ar_addr_count = ar_addr_count + 4; 
+                else
+                    next_state = IDLE;
                 next_state = WAIT_RESP;
-            end
-
-            WAIT_RESP: begin
-                next_state = IDLE;
             end
         endcase 
 
+            state <= next_state;
    end
 
 endmodule

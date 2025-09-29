@@ -55,7 +55,7 @@ module axi_merger
                 mr_wvalid <= 1'b1;
             end
  
-            if (mr_wvalid && nr_wready) begin
+            if (mr_wvalid && mr_wready) begin
                 mr_wvalid   <= 1'b0;
                 stored_wvalid <= 1'b0;
                 dr_wready    <= 1'b1;
