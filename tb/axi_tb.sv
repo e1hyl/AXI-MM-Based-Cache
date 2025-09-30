@@ -106,31 +106,32 @@ module axi_tb(
         ar_id_count = 0;
     end
     
-    always #(5ns) clk = ~clk;    
+    always #5 clk = ~clk;    
 
     localparam [2:0] SIZE_8B    = 3'd3; 
     localparam [1:0] BURST_INCR = 2'b01;
 
     initial begin
+        clk = 1;
         rst_n = 0;
 
 
         #10 rst_n = 1;
 
-        TB_AXI_AWADDR <= 8'h00000000;
+        #10 TB_AXI_AWADDR <= 8'h00000000;
         TB_AXI_AWVALID <= 1'b1;
         TB_AXI_AWID <= 0;
         TB_AXI_AWSIZE <= SIZE_8B;
         TB_AXI_BURST <= BURST_INC;
         TB_AXI_AWLEN <= 8'd0;
         
-        TB_AXI_WDATA <= 16'h0000000000000000;
+        #10 TB_AXI_WDATA <= 16'h0000000000000000;
         TB_AXI_WVALID <= 1'b1;
         TB_AXI_WSTRB <= 8'b11111111;
         TB_AXI_WVALID <= 1'b1; 
         TB_AXI_WLAST <= 1'b1;
 
-        TB_AXI_ARADDR <= 8'h80000000; 
+        #10 TB_AXI_ARADDR <= 8'h80000000; 
         TB_AXI_ARVALID <= 1'b1;
         TB_AXI_ARID <= 0;
         TB_AXI_ARSIZE <= SIZE_8B;
