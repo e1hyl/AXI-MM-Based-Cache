@@ -87,24 +87,6 @@ module axi_tb(
         .M_AXI_RREADY(TB_AXI_RREADY)
     ); 
 
-    typedef enum logic [2:0] {
-        IDLE, 
-        SEND_AW, 
-        SEND_W, 
-        SEND_AR, 
-    } my_state;
-
-    my_state state, next_state;
-
-    initial begin
-        state = IDLE;
-        next_state = IDLE;
-        aw_addr_count = 0;
-        w_data_count = 0;
-        ar_addr_count = 0;
-        aw_id_count = 0;
-        ar_id_count = 0;
-    end
     
     always #5 clk = ~clk;    
 
