@@ -106,65 +106,39 @@ module axi_tb(
         ar_id_count = 0;
     end
     
-    always #(5ns) clk = ~clk;    
+    always #5 clk = ~clk;    
 
     localparam [2:0] SIZE_8B    = 3'd3; 
     localparam [1:0] BURST_INCR = 2'b01;
 
     initial begin
+        clk = 1;
         rst_n = 0;
 
+
         #10 rst_n = 1;
-    end
 
-   always_ff @(posedge clk or negedge rst_n) begin
+        #10 TB_AXI_AWADDR <= 8'h00000000;
+        TB_AXI_AWVALID <= 1'b1;
+        TB_AXI_AWID <= 0;
+        TB_AXI_AWSIZE <= SIZE_8B;
+        TB_AXI_BURST <= BURST_INC;
+        TB_AXI_AWLEN <= 8'd0;
         
-        case(state)
-            IDLE: begin
-                next_state = SEND_AW; 
-            end
+        #10 TB_AXI_WDATA <= 16'h0000000000000000;
+        TB_AXI_WVALID <= 1'b1;
+        TB_AXI_WSTRB <= 8'b11111111;
+        TB_AXI_WVALID <= 1'b1; 
+        TB_AXI_WLAST <= 1'b1;
 
-            SEND_AW: begin
-                if(TB_AXI_AWADDR < 8'h7FFFFFFF) begin
-                    TB_AXI_AWADDR <= 8'h00000000 + aw_addr_count;
-                    TB_AXI_AWVALID <= 1'b1;
-                    TB_AXI_AWID <= 0 + aw_id_count;
-                    TB_AXI_AWSIZE <= SIZE_8B;
-                    TB_AXI_AWBURST <= BURST_INC;
-                    TB_AXI_AWLEN <= 8'd0;
-                    aw_addr_count <= aw_addr_count + 4; 
-                end
-                else 
-                    next_state = SEND_AR;
-                next_state = SEND_W;
-            end
+        #10 TB_AXI_ARADDR <= 8'h80000000; 
+        TB_AXI_ARVALID <= 1'b1;
+        TB_AXI_ARID <= 0;
+        TB_AXI_ARSIZE <= SIZE_8B;
+        TB_AXI_BURST <= BURST_INC;
+        TB_AXI_ARLEN <= 8'd0;
+        
 
-            SEND_W: begin
-                TB_AXI_WDATA <= 16'h0000000000000000 + w_data_count;
-                TB_AXI_WSTRB <= 8'b11111111;
-                TB_AXI_WVALID <= 1'b1;
-                TB_AXI_WLAST <= 1'b1;
-                w_data_count <= w_data_count + 4; 
-                next_state = SEND_AR;
-            end
-
-            SEND_AR: begin
-                if (TB_AXI_ARADDR < 8'hFFFFFFFF) begin
-                    TB_AXI_ARADDR <= 8'h80000000 + ar_addr_count;
-                    TB_AXI_ARVALID <= 1'b1;
-                    TB_AXI_ARID <= 0 + ar_id_count;  
-                    TB_AXI_ARSIZE <= SIZE_8B;
-                    TB_AXI_ARBURST <= BURST_INC;
-                    TB_AXI_ARLEN <= 8'd0;
-                    ar_addr_count <= ar_addr_count + 4; 
-                end
-                else
-                    next_state = IDLE;
-                next_state = WAIT_RESP;
-            end
-        endcase 
-
-            state <= next_state;
-   end
+    end
 
 endmodule

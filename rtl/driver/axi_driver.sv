@@ -112,107 +112,7 @@ module axi_driver
 
    logic                          latched_rready;
 
-   logic                          req_ready;
-   logic [AXI_DATA_WIDTH-1:0]     resp_data;
-
-
-   // assignments for constants
-   //assign M_AXI_AWSIZE  = SIZE_8B;      // 8 bytes per beat
-   //assign M_AXI_ARSIZE  = SIZE_8B;
-   //assign M_AXI_AWLEN   = 8'd0;         // AWLEN = beats - 1 -> 0 means 1 beat
-   //assign M_AXI_ARLEN   = 8'd0;
-   //assign M_AXI_AWBURST = BURST_INCR;   // INCR burst
-   //assign M_AXI_ARBURST = BURST_INCR;
-   //assign M_AXI_WLAST   = 1'b1;     
-
-
-   typedef enum logic [2:0] {
-      IDLE, 
-      SEND_AW, 
-      SEND_W, 
-      SEND_AR, 
-      WAIT_RESP
-      } my_state;
-
-   my_state state, next_state;
-
-
-   always_comb begin 
-      next_state = state; 
-
-      M_AXI_AWVALID = 1'b0;
-      M_AXI_WVALID  = 1'b0;
-      M_AXI_ARVALID = 1'b0;
-      M_AXI_RREADY  = 1'b0;   
-      M_AXI_BREADY  = 1'b0;
-      M_AXI_WDATA   = '0;
-      M_AXI_WSTRB   = '0;
-      M_AXI_BREADY  = 1'b0;
-      M_AXI_RREADY  = 1'b0;
-
-      req_ready  = (state == IDLE) && !latched_awvalid && !latched_arvalid;
-
-        case (state)
-
-         IDLE: begin
-            if(latched_awvalid)                
-               next_state = SEND_AW;
-            else if(latched_arvalid)
-               next_state = SEND_AR;
-         end
-
-         SEND_AW: begin
-            TB_AXI_AWREADY = 1'b1; 
-            M_AXI_AWVALID  = 1'b1;
-            M_AXI_AWADDR   = latched_awaddr;
-            M_AXI_AWID     = latched_awid;
-            if(M_AXI_AWREADY) begin
-               next_state =  SEND_W;
-            end
-         end
-
-         SEND_W: begin
-            TB_AXI_WREADY = 1'b1; 
-            M_AXI_WVALID  = 1'b1;
-            M_AXI_WDATA   = latched_wdata;
-            M_AXI_WSTRB   = latched_wstrb;
-            if (M_AXI_WVALID && M_AXI_WREADY) begin
-               next_state  = WAIT_RESP;
-            end
-         end
-
-         SEND_AR: begin
-            TB_AXI_ARREADY = 1'b1;
-            M_AXI_ARVALID  = 1'b1;
-            M_AXI_ARADDR   = latched_araddr;
-            M_AXI_ARID     = latched_arid;
-            if(M_AXI_ARREADY) 
-               next_state = WAIT_RESP;
-         end
-
-         WAIT_RESP: begin
-            if(latched_awvalid) begin
-               M_AXI_BREADY  = 1'b1;
-               TB_AXI_BRESP  = M_AXI_BRESP;
-               TB_AXI_BVALID = M_AXI_BVALID;
-               TB_AXI_BID    = M_AXI_BID; 
-               if(M_AXI_BVALID)
-                  next_state = IDLE;   
-            end 
-            else begin
-               M_AXI_RREADY = 1'b1;
-               if (M_AXI_RVALID) begin
-                  if(M_AXI_RLAST)
-                     next_state = IDLE;
-               end
-            end
-         end
-         
-         default: next_state = IDLE;
-
-      endcase
-   end
-
+   logic                          complete_request;
 
 always_ff @(posedge clk or negedge rst_n) begin
   if (!rst_n) begin
@@ -239,10 +139,9 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_arlen       <= 1'b0;
 
 
-   end else begin
-      state               <= next_state;
+   end 
 
-   if(TB_AXI_AWREADY && req_ready) begin
+   if(TB_AXI_AWVALID) begin
       latched_awvalid     <= 1'b1;
       latched_awaddr      <= TB_AXI_AWADDR;
       latched_awid        <= TB_AXI_AWID;
@@ -258,7 +157,7 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_bready      <= TB_AXI_BREADY;
    end
 
-   else begin
+   else if (TB_AXI_ARVALID) begin
       latched_arvalid     <= 1'b1;
       latched_araddr      <= TB_AXI_ARADDR;
       latched_arid        <= TB_AXI_ARID;
@@ -267,11 +166,9 @@ always_ff @(posedge clk or negedge rst_n) begin
       latched_arlen       <= TB_AXI_ARLEN;
    end
 
-
    if (M_AXI_BVALID && M_AXI_BREADY) begin
       if(M_AXI_BID == latched_awid) begin 
-         latched_awvalid      <= 1'b0;
-         latched_wvalid       <= 1'b0; 
+         complete_request = 1'b1;
       end  
    end
 
@@ -279,13 +176,31 @@ always_ff @(posedge clk or negedge rst_n) begin
    if (M_AXI_RVALID && M_AXI_RREADY) begin
       resp_data <= M_AXI_RDATA;
       if (M_AXI_RLAST && M_AXI_RID == latched_arid) begin
-         latched_arvalid <= 1'b0;
+         complete_request = 1'b1;
       end
    end
 
   end
 
-end
-   
+assign M_AXI_AWADDR = latched_awaddr; 
+assign M_AXI_AWVALID = latched_awvalid;
+assign M_AXI_AWID = latched_awid;
+assign M_AXI_AWBURST = latched_awburst;
+assign M_AXI_AWSIZE = latched_awsize;
+assign M_AXI_AWLEN = latched_awlen;
+
+assign M_AXI_WDATA = latched_wdata;
+assign M_AXI_WSTRB = latched_wstrb;
+assign M_AXI_WVALID = latched_awvalid;
+assign M_AXI_WLAST = latched_wlast;
+
+assign M_AXI_BREADY = latched_bready;
+
+assign M_AXI_ARADDR = latched_araddr;
+assign M_AXI_ARVALID = latched_arvalid;
+assign M_AXI_ARID = latched_arid;
+assign M_AXI_ARBURST = latched_arburst;
+assign M_AXI_ARSIZE = latched_arsize;
+assign M_AXI_ARLEN = latched_arlen;
 
 endmodule
