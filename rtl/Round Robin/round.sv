@@ -30,6 +30,39 @@ module round(
             
     end
     
-
-    
+   always_ff @(posedge clk or negedge rst) begin
+            if (!rst)
+            begin
+                out_data<=0;
+                out_valid<=0;
+                read_or_write<=0;   // 0 for read
+                r_ready<=0;
+                w_ready<=0;
+            end
+            else if (grant==0)   //read case
+             begin  
+               out_data<={{(w_width-r_width){1'b0}}, rdata};
+               out_valid<=r_valid;
+               read_or_write<=0;   // 0 for read
+               r_ready<=r_valid && out_ready;
+               w_ready<=0;
+            end
+            else begin
+               out_data<=wdata;
+               out_valid<=w_valid;
+               read_or_write<=1;   // 1 for write
+               r_ready<=0;
+               w_ready<=w_valid && out_ready;         
+                        
+            end
+   end
+   always_ff @(posedge clk or negedge rst)
+   begin
+        if(!rst)
+            last_served<= 1'b0;   //assume its read
+        else if( out_valid && out_ready)
+               last_served<=grant;   //The arbiter must wait until out_ready = 1 before it can actually send data
+            
+   end
+        
 endmodule
