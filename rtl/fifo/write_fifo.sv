@@ -3,7 +3,7 @@ module write_fifo #(
     parameter integer DATA_WIDTH = 64,
     parameter integer ID_WIDTH = 4, 
     parameter integer DEPTH = 8,
-    localparam integer WIDTH = ADDR_WIDTH + ID_WIDTH + 2 + 3 + 8 + 1 + DATA_WIDTH + DATA_WIDTH/8 + 1 + 1 
+    localparam integer WIDTH = ADDR_WIDTH + ID_WIDTH + 2 + 3 + 8 +  DATA_WIDTH + DATA_WIDTH/8  
 )(
 
     input logic clk,
@@ -15,11 +15,9 @@ module write_fifo #(
     input logic [1:0] awburst,
     input logic [2:0] awsize,
     input logic [7:0] awlen,
-    input logic awready,
 
     input logic [DATA_WIDTH-1:0] wdata,
     input logic [DATA_WIDTH/8-1:0] wstrb,
-    input logic wvalid,
     
     input logic push_awvalid,
     output logic push_awready,
@@ -38,7 +36,7 @@ module write_fifo #(
     logic [$clog2(DEPTH+1)-1:0] wr_ptr, rd_ptr;
     logic [$clog2(DEPTH+1)-1:0] count; 
      
-    logic [WIDTH-1:0] push_data = {awaddr, awid, awburst, awsize, awlen, awready, wdata, wstrb, wvalid, awvalid};
+    logic [WIDTH-1:0] push_data = {awaddr, awid, awburst, awsize, awlen, wdata, wstrb};
 
 
     assign full = (count == DEPTH);
