@@ -37,7 +37,6 @@ module axi_tb(
     logic [AXI_DATA_WIDTH-1:0]     TB_AXI_WDATA;
     logic [AXI_DATA_WIDTH/8-1:0]   TB_AXI_WSTRB;
     logic                          TB_AXI_WVALID;
-    logic                          TB_AXI_WLAST;
 
     logic                          TB_AXI_BREADY;
 
@@ -97,7 +96,6 @@ module axi_tb(
         clk = 1;
         rst_n = 0;
 
-
         #10 rst_n = 1;
 
         #10 TB_AXI_AWADDR <= 8'h00000000;
@@ -111,7 +109,6 @@ module axi_tb(
         TB_AXI_WVALID <= 1'b1;
         TB_AXI_WSTRB <= 8'b11111111;
         TB_AXI_WVALID <= 1'b1; 
-        TB_AXI_WLAST <= 1'b1;
 
         #10 TB_AXI_ARADDR <= 8'h80000000; 
         TB_AXI_ARVALID <= 1'b1;

@@ -22,7 +22,6 @@ module axi_driver
    input  logic [AXI_DATA_WIDTH-1:0]     TB_AXI_WDATA,
    input  logic [AXI_DATA_WIDTH/8-1:0]   TB_AXI_WSTRB,
    input  logic                          TB_AXI_WVALID,
-   input  logic                          TB_AXI_WLAST,
    output logic                          TB_AXI_WREADY,
 
    output logic [1:0]                    TB_AXI_BRESP,
