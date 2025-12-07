@@ -1,50 +1,74 @@
 module axi_merger
 #(
-   parameter integer AXI_ADDR_WIDTH  = 32,
-   parameter integer AXI_DATA_WIDTH  = 64,
-   parameter integer AXI_ID_WIDTH    = 4
+   parameter integer ADDR_WIDTH  = 32,
+   parameter integer DATA_WIDTH  = 64,
+   parameter integer ID_WIDTH    = 4
 )
 (
    input clk, rst_n,
 
+   // input interface (unsynchronized)
    input logic awvalid,
-   input logic [AXI_ADDR_WIDTH-1:0] awaddr,
-   input logic [AXI_ID_WIDTH-1:0] awid,
-   input logic [1:0] awburst,
-   input logic [2:0] awsize,
-   input logic [7:0] awlen,
-   input logic awready,
-   output logic awready,
+   input logic [ADDR_WIDTH-1:0] in_awaddr,
+   input logic [ID_WIDTH-1:0] in_awid,
+   input logic [1:0] in_awburst,
+   input logic [2:0] in_awsize,
+   input logic [7:0] in_awlen,
+   input logic in_awready,
+   output logic in_awready,
 
+   input logic [DATA_WIDTH-1:0] in_wdata,
+   input logic [DATA_WIDTH/8-1:0] in_wstrb,
+   input logic in_wlast, 
+   input logic in_wvalid,
+   output logic in_wready,
 
-   input logic [AXI_DATA_WIDTH-1:0] wdata,
-   input logic [AXI_DATA_WIDTH/8-1:0] wstrb,
-   input logic wvalid,
-   output logic wready,
+   input logic in_bready,
+   output logic in_bresp,
+   output logic in_bvalid,
+   output logic in_bid,
 
-   input logic bready,
-   output logic bresp,
-   output logic bvalid,
-   output logic bid,
+   // output interface (synchronized)
+
+   output logic awvalid,
+   output logic [ADDR_WIDTH-1:0] out_awaddr,
+   output logic [ID_WIDTH-1:0] out_awid,
+   output logic [1:0] out_awburst,
+   output logic [2:0] out_awsize,
+   output logic [7:0] out_awlen,
+   output logic out_awready,
+   input logic out_awready,
+
+   output logic [DATA_WIDTH-1:0] out_wdata,
+   output logic [DATA_WIDTH/8-1:0] out_wstrb,
+   output logic out_wlast, 
+   output logic out_wvalid,
+   input logic out_wready,
+
+   input logic out_bready,
+   output logic out_bresp,
+   output logic out_bvalid,
+   output logic out_bid,
+
 );
 
    logic pending_data; // flag for pending data
 
-   logic c_awvalid;
-   logic [AXI_ID_WIDTH-1:0] c_awid;
+   // registers for capturing aw 
+   logic [DATA_WIDTH-1:0] c_awaddr;
+   logic [ID_WIDTH-1:0] c_awid;
    logic [1:0] c_awburst;
    logic [2:0] c_awsize;
    logic [7:0] c_awlen;
    logic c_awready;
 
+   // registers for capturing w 
    logic [AXI_DATA_WIDTH-1:0] c_wdata;
    logic [AXI_DATA_WIDTH/8-1:0] c_wstrb;
    logic c_wvalid;
 
-
    assign awready = !pending_data;
    assign wready = ((awvalid & awready) || pending_data);
-  // assign pending_data = (pending_data & wvalid & wready)?1'b0:pending_data;
 
    always_ff (posedge clk or negedge rst_n) begin
       if(!rst_n)
@@ -52,34 +76,59 @@ module axi_merger
       else begin
          if((awvalid & awready) && !wvalid) 
             pending_data <= 1'b1;     
-         else if(pending_data & wvalid & wready)
+         else if(pending_data & wvalid)
             pending_data <= 1'b0;
          else
-            pending_data <= 1'b0; 
+            pending_data <= pending_data; 
       end
    end
-   
+
+   always_ff (posedge clk or negedge rst_n) begin
+      if(!rst_n)
+         pending_data <= 1'b0; 
+      else begin
+         if((awvalid & awready) && !wvalid) 
+            pending_data <= 1'b1;     
+         else if(pending_data & wvalid)
+            pending_data <= 1'b0;
+         else
+            pending_data <= pending_data; 
+      end
+   end
+
    always_ff (posedge clk or negedge rst_n) begin
       if(!rst_n) begin
-
+         c_awid <= '0;
+         c_awaddr <= '0;
+         c_awburst <= '0;
+         c_awsize <= '0;
+         c_awlen <= '0; 
+      end else begin
+     
+      if(pending_data && awvalid) begin
+         c_awid <= awid;
+         c_awaddr <= awaddr;
+         c_awburst <= awburst;
+         c_awsize <= awsize;
+         c_awlen <= awlen; 
       end
       else begin
-         if(pending_data && awvalid) begin
-            c_awvalid <= awvalid;
-            c_awid <= awid;
-            c_awaddr <= awaddr;
-            c_awburst <= awburst;
-            c_awsize <= awsize;
-            c_awlen <= awlen; 
-         end
-
-         if(wvalid) begin
-            
-         end
-
-
+         c_awid <= c_awid;
+         c_awaddr <= c_awaddr;
+         c_awburst <= c_awburst;
+         c_awsize <= c_awsize;
+         c_awlen <= c_awlen; 
       end
    end
 
+   assign out_awid = c_awid;
+   assign out_awaddr = c_awid;
+   assign out_awburst = c_awburst;
+   assign out_awsize = c_awsize;
+   assign out_awlen = c_awlen;
+   
+   assign out_wdata = in_wdata;
+   assign out_wstrb = in_wstrb;
+   assign out_wlast = in_wlast; 
 
 endmodule
