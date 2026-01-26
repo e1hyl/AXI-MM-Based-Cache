@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module axi_merger
 #(
    parameter integer ADDR_WIDTH  = 32,

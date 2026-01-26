@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module write_fifo #(
     parameter integer ADDR_WIDTH = 32,
     parameter integer DATA_WIDTH = 64,
@@ -23,8 +25,8 @@ module write_fifo #(
     output logic push_awready,
 
     //output interface
-    input logic pop_awvalid,
-    output logic pop_awready,
+    output logic pop_awvalid,
+    input logic pop_awready,
     output logic [WIDTH-1:0] pop_data, 
 
     //status
@@ -41,6 +43,7 @@ module write_fifo #(
 
     assign full = (count == DEPTH);
     assign empty = (count == 0);
+    assign pop_awvalid = !empty;
 
     always_ff @(posedge clk or negedge rst_n) begin
        if(!rst_n) begin

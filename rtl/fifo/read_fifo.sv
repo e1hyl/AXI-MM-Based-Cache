@@ -1,5 +1,7 @@
+`timescale 1ns / 1ps
+
 module read_fifo(
-    parameter integer ADDR_WIDTH = 64,
+    parameter integer ADDR_WIDTH = 32,
     parameter integer ID_WIDTH = 4,
     parameter integer DEPTH = 8,
     localparam integer WIDTH = ADDR_WIDTH + ID_WIDTH + 2 + 3 + 8
@@ -18,8 +20,8 @@ module read_fifo(
     output logic push_arready,
 
     // output interface
-    input logic pop_arvalid,
-    output logic pop_arready,
+    output logic pop_arvalid,
+    input logic pop_arready,
     output logic [WIDTH-1:0] pop_data,
     
     output logic full,
@@ -35,6 +37,7 @@ module read_fifo(
 
     assign full = (count == DEPTH);
     assign empty = (count == 0);
+    assign pop_arvalid = !empty;
 
     always_ff @(posedge clk or negedge rst_n) begin
        if(!rst_n) begin
@@ -47,7 +50,7 @@ module read_fifo(
             wr_ptr <= wr_ptr + 1;
         end
 
-        if(pop_arvalid && pop_arready) begin
+        if(pop_arready) begin
             pop_data <= mem[rd_ptr];
             rd_ptr <= (rd_ptr + 1) % DEPTH;
         end
