@@ -16,7 +16,7 @@ module axi_merger
    input logic [1:0] in_awburst,
    input logic [2:0] in_awsize,
    input logic [7:0] in_awlen,
-   input logic in_awready,
+   input logic in_awvalid,
    output logic in_awready,
 
    input logic [DATA_WIDTH-1:0] in_wdata,
@@ -25,20 +25,14 @@ module axi_merger
    input logic in_wvalid,
    output logic in_wready,
 
-   input logic in_bready,
-   output logic in_bresp,
-   output logic in_bvalid,
-   output logic in_bid,
-
    // output interface (synchronized)
 
-   output logic awvalid,
    output logic [ADDR_WIDTH-1:0] out_awaddr,
    output logic [ID_WIDTH-1:0] out_awid,
    output logic [1:0] out_awburst,
    output logic [2:0] out_awsize,
    output logic [7:0] out_awlen,
-   output logic out_awready,
+   output logic out_awvalid,
    input logic out_awready,
 
    output logic [DATA_WIDTH-1:0] out_wdata,
@@ -46,11 +40,6 @@ module axi_merger
    output logic out_wlast, 
    output logic out_wvalid,
    input logic out_wready,
-
-   input logic out_bready,
-   output logic out_bresp,
-   output logic out_bvalid,
-   output logic out_bid,
 
 );
 
@@ -65,8 +54,8 @@ module axi_merger
    logic c_awready;
 
    // registers for capturing w 
-   logic [AXI_DATA_WIDTH-1:0] c_wdata;
-   logic [AXI_DATA_WIDTH/8-1:0] c_wstrb;
+   logic [DATA_WIDTH-1:0] c_wdata;
+   logic [DATA_WIDTH/8-1:0] c_wstrb;
    logic c_wvalid;
 
    assign awready = !pending_data;
@@ -85,18 +74,6 @@ module axi_merger
       end
    end
 
-   always_ff (posedge clk or negedge rst_n) begin
-      if(!rst_n)
-         pending_data <= 1'b0; 
-      else begin
-         if((awvalid & awready) && !wvalid) 
-            pending_data <= 1'b1;     
-         else if(pending_data & wvalid)
-            pending_data <= 1'b0;
-         else
-            pending_data <= pending_data; 
-      end
-   end
 
    always_ff (posedge clk or negedge rst_n) begin
       if(!rst_n) begin
