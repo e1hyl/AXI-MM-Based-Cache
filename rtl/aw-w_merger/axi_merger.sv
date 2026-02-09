@@ -10,7 +10,6 @@ module axi_merger
    input clk, rst_n,
 
    // input interface (unsynchronized)
-   input logic awvalid,
    input logic [ADDR_WIDTH-1:0] in_awaddr,
    input logic [ID_WIDTH-1:0] in_awid,
    input logic [1:0] in_awburst,
@@ -58,14 +57,16 @@ module axi_merger
    logic [DATA_WIDTH/8-1:0] c_wstrb;
    logic c_wvalid;
 
-   assign awready = !pending_data;
-   assign wready = ((awvalid & awready) || pending_data);
+   assign in_awready = !pending_data;
+   assign in_wready = ((in_awvalid && in_awready) || pending_data);
+   assign out_awvalid = in_wvalid;
+   assign out_wvalid = in_wvalid;
 
    always_ff (posedge clk or negedge rst_n) begin
       if(!rst_n)
          pending_data <= 1'b0; 
       else begin
-         if((awvalid & awready) && !wvalid) 
+         if((in_awvalid && in_awready) && !in_wvalid) 
             pending_data <= 1'b1;     
          else if(pending_data & wvalid)
             pending_data <= 1'b0;
@@ -83,13 +84,12 @@ module axi_merger
          c_awsize <= '0;
          c_awlen <= '0; 
       end else begin
-     
-      if(pending_data && awvalid) begin
-         c_awid <= awid;
-         c_awaddr <= awaddr;
-         c_awburst <= awburst;
-         c_awsize <= awsize;
-         c_awlen <= awlen; 
+      if(pending_data && in_awvalid) begin
+         c_awid <= in_awid;
+         c_awaddr <= in_awaddr;
+         c_awburst <= in_awburst;
+         c_awsize <= in_awsize;
+         c_awlen <= in_awlen; 
       end
       else begin
          c_awid <= c_awid;
