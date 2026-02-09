@@ -38,7 +38,7 @@ module axi_merger
    output logic [DATA_WIDTH/8-1:0] out_wstrb,
    output logic out_wlast, 
    output logic out_wvalid,
-   input logic out_wready,
+   input logic out_wready
 
 );
 
@@ -62,7 +62,7 @@ module axi_merger
    assign out_awvalid = in_wvalid;
    assign out_wvalid = in_wvalid;
 
-   always_ff (posedge clk or negedge rst_n) begin
+   always_ff @(posedge clk or negedge rst_n) begin
       if(!rst_n)
          pending_data <= 1'b0; 
       else begin
@@ -76,7 +76,7 @@ module axi_merger
    end
 
 
-   always_ff (posedge clk or negedge rst_n) begin
+   always_ff @(posedge clk or negedge rst_n) begin
       if(!rst_n) begin
          c_awid <= '0;
          c_awaddr <= '0;
@@ -98,6 +98,7 @@ module axi_merger
          c_awsize <= c_awsize;
          c_awlen <= c_awlen; 
       end
+   end
    end
 
    assign out_awid = c_awid;
