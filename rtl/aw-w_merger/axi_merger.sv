@@ -59,16 +59,14 @@ module axi_merger
 
    assign in_awready = !pending_data;
    assign in_wready = ((in_awvalid && in_awready) || pending_data);
-   assign out_awvalid = in_wvalid;
-   assign out_wvalid = in_wvalid;
-
+   
    always_ff @(posedge clk or negedge rst_n) begin
       if(!rst_n)
          pending_data <= 1'b0; 
       else begin
-         if((in_awvalid && in_awready) && !in_wvalid) 
+         if(in_awvalid && in_awready) 
             pending_data <= 1'b1;     
-         else if(pending_data & wvalid)
+         else if(pending_data & in_wvalid)
             pending_data <= 1'b0;
          else
             pending_data <= pending_data; 
@@ -89,26 +87,41 @@ module axi_merger
          c_awaddr <= in_awaddr;
          c_awburst <= in_awburst;
          c_awsize <= in_awsize;
-         c_awlen <= in_awlen; 
+         c_awlen <= in_awlen;
       end
       else begin
          c_awid <= c_awid;
          c_awaddr <= c_awaddr;
          c_awburst <= c_awburst;
          c_awsize <= c_awsize;
-         c_awlen <= c_awlen; 
+         c_awlen <= c_awlen;
+     
       end
    end
    end
 
+   always_ff @(posedge clk or negedge rst_n) begin
+      if(!rst_n) begin
+         out_wdata = '0;
+         out_wstrb = '0;
+         out_wlast = '0;
+      end
+      else begin
+      if(in_wvalid && in_wready) begin   
+         out_wdata = in_wdata;
+         out_wstrb = in_wstrb;
+         out_wlast = in_wlast;
+      end  
+   end
+   end
+
    assign out_awid = c_awid;
-   assign out_awaddr = c_awid;
+   assign out_awaddr = c_awaddr;
    assign out_awburst = c_awburst;
    assign out_awsize = c_awsize;
    assign out_awlen = c_awlen;
-   
-   assign out_wdata = in_wdata;
-   assign out_wstrb = in_wstrb;
-   assign out_wlast = in_wlast; 
+
+   assign out_awvalid = in_wvalid && in_wready && !pending_data;
+   assign out_wvalid = in_wvalid && in_wready && !pending_data;
 
 endmodule
