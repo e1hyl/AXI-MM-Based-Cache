@@ -51,5 +51,21 @@ module tagstore(
                 for (int j = 0; j < 4; j++) begin
                     tag_array[i][j] <= 19'b0;
                 end
+            end
+        end else if (write_en) begin
+            tag_array[write_index][target_way] <= new_tag;
+        end
+    end
+
+    // Combinational Read Logic
+    // This feeds the Hit Detector in the same cycle as the index arrives
+    always_comb begin
+        tags_out_0 = tag_array[index][0];
+        tags_out_1 = tag_array[index][1];
+        tags_out_2 = tag_array[index][2];
+        tags_out_3 = tag_array[index][3];
+    end
+
+endmodule
 
 
