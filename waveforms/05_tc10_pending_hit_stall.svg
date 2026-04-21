@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="814" style="background:#12121e; font-family:'Courier New',monospace;">
+<rect width="1700" height="814" fill="#12121e"/>
+<text x="850" y="22" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">TC10 — Pending-Hit Stall: AR1 Non-Blocking Miss, AR2 Stalls Until Fill, pending_resolved Fires</text>
+<line x1="220" y1="42" x2="1652" y2="42" stroke="#666677" stroke-width="1"/>
+<line x1="220.0" y1="37" x2="220.0" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="220.0" y="59" text-anchor="middle" fill="#666677" font-size="9">0ns</text>
+<line x1="220.0" y1="62" x2="220.0" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="322.3" y1="37" x2="322.3" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="322.3" y="59" text-anchor="middle" fill="#666677" font-size="9">10ns</text>
+<line x1="322.3" y1="62" x2="322.3" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="424.6" y1="37" x2="424.6" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="424.6" y="59" text-anchor="middle" fill="#666677" font-size="9">20ns</text>
+<line x1="424.6" y1="62" x2="424.6" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="526.9" y1="37" x2="526.9" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="526.9" y="59" text-anchor="middle" fill="#666677" font-size="9">30ns</text>
+<line x1="526.9" y1="62" x2="526.9" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="629.1" y1="37" x2="629.1" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="629.1" y="59" text-anchor="middle" fill="#666677" font-size="9">40ns</text>
+<line x1="629.1" y1="62" x2="629.1" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="731.4" y1="37" x2="731.4" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="731.4" y="59" text-anchor="middle" fill="#666677" font-size="9">50ns</text>
+<line x1="731.4" y1="62" x2="731.4" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="833.7" y1="37" x2="833.7" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="833.7" y="59" text-anchor="middle" fill="#666677" font-size="9">60ns</text>
+<line x1="833.7" y1="62" x2="833.7" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="936.0" y1="37" x2="936.0" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="936.0" y="59" text-anchor="middle" fill="#666677" font-size="9">70ns</text>
+<line x1="936.0" y1="62" x2="936.0" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1038.3" y1="37" x2="1038.3" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1038.3" y="59" text-anchor="middle" fill="#666677" font-size="9">80ns</text>
+<line x1="1038.3" y1="62" x2="1038.3" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1140.6" y1="37" x2="1140.6" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1140.6" y="59" text-anchor="middle" fill="#666677" font-size="9">90ns</text>
+<line x1="1140.6" y1="62" x2="1140.6" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1242.9" y1="37" x2="1242.9" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1242.9" y="59" text-anchor="middle" fill="#666677" font-size="9">100ns</text>
+<line x1="1242.9" y1="62" x2="1242.9" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1345.1" y1="37" x2="1345.1" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1345.1" y="59" text-anchor="middle" fill="#666677" font-size="9">110ns</text>
+<line x1="1345.1" y1="62" x2="1345.1" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1447.4" y1="37" x2="1447.4" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1447.4" y="59" text-anchor="middle" fill="#666677" font-size="9">120ns</text>
+<line x1="1447.4" y1="62" x2="1447.4" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1549.7" y1="37" x2="1549.7" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1549.7" y="59" text-anchor="middle" fill="#666677" font-size="9">130ns</text>
+<line x1="1549.7" y1="62" x2="1549.7" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1652.0" y1="37" x2="1652.0" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1652.0" y="59" text-anchor="middle" fill="#666677" font-size="9">140ns</text>
+<line x1="1652.0" y1="62" x2="1652.0" y2="790" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<rect x="220" y="68" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="89" text-anchor="end" fill="#cccccc" font-size="11">clk</text>
+<line x1="220" y1="85" x2="1652" y2="85" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,100 H271.1 V73 H322.3 V100 H373.4 V73 H424.6 V100 H475.7 V73 H526.9 V100 H578.0 V73 H629.1 V100 H680.3 V73 H731.4 V100 H782.6 V73 H833.7 V100 H884.9 V73 H936.0 V100 H987.1 V73 H1038.3 V100 H1089.4 V73 H1140.6 V100 H1191.7 V73 H1242.9 V100 H1294.0 V73 H1345.1 V100 H1396.3 V73 H1447.4 V100 H1498.6 V73 H1549.7 V100 H1600.9 V73 H1652.0 V100 H1652.0" stroke="#4488ff" stroke-width="2" fill="none"/>
+<rect x="271.1" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="373.4" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="475.7" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="578.0" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="680.3" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="782.6" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="884.9" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="987.1" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1089.4" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1191.7" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1294.0" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1396.3" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1498.6" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1600.9" y="73" width="51.1" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="220" y="106" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="127" text-anchor="end" fill="#cccccc" font-size="11">rst_n</text>
+<line x1="220" y1="123" x2="1652" y2="123" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,111 H1652.0" stroke="#ff6644" stroke-width="2" fill="none"/>
+<rect x="220.0" y="111" width="1432.0" height="27" fill="#ff6644" fill-opacity="0.18"/>
+<rect x="220" y="144" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="165" text-anchor="end" fill="#cccccc" font-size="11">ARVALID</text>
+<line x1="220" y1="161" x2="1652" y2="161" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,176 H424.6 V149 H629.1 V176 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="424.6" y="149" width="204.6" height="27" fill="#ff4466" fill-opacity="0.18"/>
+<rect x="220" y="182" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="203" text-anchor="end" fill="#cccccc" font-size="11">ARREADY</text>
+<line x1="220" y1="199" x2="1652" y2="199" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,187 H1652.0" stroke="#44dd88" stroke-width="2" fill="none"/>
+<rect x="220.0" y="187" width="1432.0" height="27" fill="#44dd88" fill-opacity="0.18"/>
+<rect x="220" y="220" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="241" text-anchor="end" fill="#cccccc" font-size="11">ARADDR</text>
+<line x1="220" y1="237" x2="1652" y2="237" stroke="#1e1e30" stroke-width="1"/>
+<polygon points="220.0,237 226.0,225 418.6,225 424.6,237 418.6,252 226.0,252" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="322.3" y="241" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+<polygon points="424.6,237 430.6,225 623.1,225 629.1,237 623.1,252 430.6,252" fill="#bb88ff28" stroke="#bb88ff" stroke-width="1.2"/>
+<text x="526.9" y="241" text-anchor="middle" fill="#bb88ff" font-size="10">80</text>
+<polygon points="629.1,237 635.1,225 1646.0,225 1652.0,237 1646.0,252 635.1,252" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="1140.6" y="241" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+<rect x="220" y="258" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="279" text-anchor="end" fill="#cccccc" font-size="11">mshr_alloc_en</text>
+<line x1="220" y1="275" x2="1652" y2="275" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,290 H731.4 V263 H833.7 V290 H1652.0" stroke="#ffcc44" stroke-width="2" fill="none"/>
+<rect x="731.4" y="263" width="102.3" height="27" fill="#ffcc44" fill-opacity="0.18"/>
+<rect x="220" y="296" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="317" text-anchor="end" fill="#cccccc" font-size="11">out_ready</text>
+<line x1="220" y1="313" x2="1652" y2="313" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,328 H731.4 V301 H833.7 V328 H1652.0" stroke="#ffcc44" stroke-width="2" fill="none"/>
+<rect x="731.4" y="301" width="102.3" height="27" fill="#ffcc44" fill-opacity="0.18"/>
+<rect x="220" y="334" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="355" text-anchor="end" fill="#cccccc" font-size="11">hd_pending_hit</text>
+<line x1="220" y1="351" x2="1652" y2="351" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,366 H833.7 V339 H1038.3 V366 H1652.0" stroke="#ff8844" stroke-width="2" fill="none"/>
+<rect x="833.7" y="339" width="204.6" height="27" fill="#ff8844" fill-opacity="0.18"/>
+<rect x="220" y="372" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="393" text-anchor="end" fill="#cccccc" font-size="11">stall</text>
+<line x1="220" y1="389" x2="1652" y2="389" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,404 H833.7 V377 H1140.6 V404 H1652.0" stroke="#ff8844" stroke-width="2" fill="none"/>
+<rect x="833.7" y="377" width="306.9" height="27" fill="#ff8844" fill-opacity="0.18"/>
+<rect x="220" y="410" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="431" text-anchor="end" fill="#cccccc" font-size="11">mshr_ARVALID</text>
+<line x1="220" y1="427" x2="1652" y2="427" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,442 H731.4 V415 H936.0 V442 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="731.4" y="415" width="204.6" height="27" fill="#ff4466" fill-opacity="0.18"/>
+<rect x="220" y="448" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="469" text-anchor="end" fill="#cccccc" font-size="11">mm_RVALID</text>
+<line x1="220" y1="465" x2="1652" y2="465" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,480 H936.0 V453 H1038.3 V480 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="936.0" y="453" width="102.3" height="27" fill="#ff4466" fill-opacity="0.18"/>
+<rect x="220" y="486" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="507" text-anchor="end" fill="#cccccc" font-size="11">mm_rcvd</text>
+<line x1="220" y1="503" x2="1652" y2="503" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,518 H936.0 V491 H1038.3 V518 H1652.0" stroke="#ffcc44" stroke-width="2" fill="none"/>
+<rect x="936.0" y="491" width="102.3" height="27" fill="#ffcc44" fill-opacity="0.18"/>
+<rect x="220" y="524" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="545" text-anchor="end" fill="#cccccc" font-size="11">pending_resolved</text>
+<line x1="220" y1="541" x2="1652" y2="541" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,556 H936.0 V529 H1038.3 V556 H1652.0" stroke="#ffcc44" stroke-width="2" fill="none"/>
+<rect x="936.0" y="529" width="102.3" height="27" fill="#ffcc44" fill-opacity="0.18"/>
+<rect x="220" y="562" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="583" text-anchor="end" fill="#cccccc" font-size="11">fq_push</text>
+<line x1="220" y1="579" x2="1652" y2="579" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,594 H936.0 V567 H1038.3 V594 H1652.0" stroke="#ffcc44" stroke-width="2" fill="none"/>
+<rect x="936.0" y="567" width="102.3" height="27" fill="#ffcc44" fill-opacity="0.18"/>
+<rect x="220" y="600" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="621" text-anchor="end" fill="#cccccc" font-size="11">rresp_valid</text>
+<line x1="220" y1="617" x2="1652" y2="617" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,632 H1038.3 V605 H1242.9 V632 H1652.0" stroke="#aaaaff" stroke-width="2" fill="none"/>
+<rect x="1038.3" y="605" width="204.6" height="27" fill="#aaaaff" fill-opacity="0.18"/>
+<rect x="220" y="638" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="659" text-anchor="end" fill="#cccccc" font-size="11">fq_valid</text>
+<line x1="220" y1="655" x2="1652" y2="655" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,670 H1038.3 V643 H1447.4 V670 H1652.0" stroke="#aaaaff" stroke-width="2" fill="none"/>
+<rect x="1038.3" y="643" width="409.1" height="27" fill="#aaaaff" fill-opacity="0.18"/>
+<rect x="220" y="676" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="697" text-anchor="end" fill="#cccccc" font-size="11">RVALID</text>
+<line x1="220" y1="693" x2="1652" y2="693" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,708 H1038.3 V681 H1447.4 V708 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="1038.3" y="681" width="409.1" height="27" fill="#ff4466" fill-opacity="0.18"/>
+<rect x="220" y="714" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="735" text-anchor="end" fill="#cccccc" font-size="11">RREADY</text>
+<line x1="220" y1="731" x2="1652" y2="731" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,746 H1038.3 V719 H1140.6 V746 H1242.9 V719 H1447.4 V746 H1652.0" stroke="#44dd88" stroke-width="2" fill="none"/>
+<rect x="1038.3" y="719" width="102.3" height="27" fill="#44dd88" fill-opacity="0.18"/>
+<rect x="1242.9" y="719" width="204.6" height="27" fill="#44dd88" fill-opacity="0.18"/>
+<rect x="220" y="752" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="773" text-anchor="end" fill="#cccccc" font-size="11">RDATA</text>
+<line x1="220" y1="769" x2="1652" y2="769" stroke="#1e1e30" stroke-width="1"/>
+<polygon points="220.0,769 226.0,757 1032.3,757 1038.3,769 1032.3,784 226.0,784" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="629.1" y="773" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+<polygon points="1038.3,769 1044.3,757 1236.9,757 1242.9,769 1236.9,784 1044.3,784" fill="#44cccc28" stroke="#44cccc" stroke-width="1.2"/>
+<text x="1140.6" y="773" text-anchor="middle" fill="#44cccc" font-size="10">..C0DE0010BEEF</text>
+<polygon points="1242.9,769 1248.9,757 1441.4,757 1447.4,769 1441.4,784 1248.9,784" fill="#44cccc28" stroke="#44cccc" stroke-width="1.2"/>
+<text x="1345.1" y="773" text-anchor="middle" fill="#44cccc" font-size="10">..C0DE0010BEEF</text>
+<polygon points="1447.4,769 1453.4,757 1646.0,757 1652.0,769 1646.0,784 1453.4,784" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="1549.7" y="773" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+</svg>

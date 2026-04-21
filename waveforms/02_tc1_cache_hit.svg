@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="586" style="background:#12121e; font-family:'Courier New',monospace;">
+<rect width="1700" height="586" fill="#12121e"/>
+<text x="850" y="22" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">TC1 — Cache Hit: Immediate Single-Cycle Response, Zero Main-Memory Traffic</text>
+<line x1="220" y1="42" x2="1652" y2="42" stroke="#666677" stroke-width="1"/>
+<line x1="220.0" y1="37" x2="220.0" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="220.0" y="59" text-anchor="middle" fill="#666677" font-size="9">0ns</text>
+<line x1="220.0" y1="62" x2="220.0" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="363.2" y1="37" x2="363.2" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="363.2" y="59" text-anchor="middle" fill="#666677" font-size="9">10ns</text>
+<line x1="363.2" y1="62" x2="363.2" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="506.4" y1="37" x2="506.4" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="506.4" y="59" text-anchor="middle" fill="#666677" font-size="9">20ns</text>
+<line x1="506.4" y1="62" x2="506.4" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="649.6" y1="37" x2="649.6" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="649.6" y="59" text-anchor="middle" fill="#666677" font-size="9">30ns</text>
+<line x1="649.6" y1="62" x2="649.6" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="792.8" y1="37" x2="792.8" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="792.8" y="59" text-anchor="middle" fill="#666677" font-size="9">40ns</text>
+<line x1="792.8" y1="62" x2="792.8" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="936.0" y1="37" x2="936.0" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="936.0" y="59" text-anchor="middle" fill="#666677" font-size="9">50ns</text>
+<line x1="936.0" y1="62" x2="936.0" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1079.2" y1="37" x2="1079.2" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1079.2" y="59" text-anchor="middle" fill="#666677" font-size="9">60ns</text>
+<line x1="1079.2" y1="62" x2="1079.2" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1222.4" y1="37" x2="1222.4" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1222.4" y="59" text-anchor="middle" fill="#666677" font-size="9">70ns</text>
+<line x1="1222.4" y1="62" x2="1222.4" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1365.6" y1="37" x2="1365.6" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1365.6" y="59" text-anchor="middle" fill="#666677" font-size="9">80ns</text>
+<line x1="1365.6" y1="62" x2="1365.6" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1508.8" y1="37" x2="1508.8" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1508.8" y="59" text-anchor="middle" fill="#666677" font-size="9">90ns</text>
+<line x1="1508.8" y1="62" x2="1508.8" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<line x1="1652.0" y1="37" x2="1652.0" y2="47" stroke="#666677" stroke-width="1"/>
+<text x="1652.0" y="59" text-anchor="middle" fill="#666677" font-size="9">100ns</text>
+<line x1="1652.0" y1="62" x2="1652.0" y2="562" stroke="#1e1e30" stroke-width="1" stroke-dasharray="3,4"/>
+<rect x="220" y="68" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="89" text-anchor="end" fill="#cccccc" font-size="11">clk</text>
+<line x1="220" y1="85" x2="1652" y2="85" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,100 H291.6 V73 H363.2 V100 H434.8 V73 H506.4 V100 H578.0 V73 H649.6 V100 H721.2 V73 H792.8 V100 H864.4 V73 H936.0 V100 H1007.6 V73 H1079.2 V100 H1150.8 V73 H1222.4 V100 H1294.0 V73 H1365.6 V100 H1437.2 V73 H1508.8 V100 H1580.4 V73 H1652.0 V100 H1652.0" stroke="#4488ff" stroke-width="2" fill="none"/>
+<rect x="291.6" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="434.8" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="578.0" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="721.2" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="864.4" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1007.6" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1150.8" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1294.0" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1437.2" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="1580.4" y="73" width="71.6" height="27" fill="#4488ff" fill-opacity="0.18"/>
+<rect x="220" y="106" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="127" text-anchor="end" fill="#cccccc" font-size="11">rst_n</text>
+<line x1="220" y1="123" x2="1652" y2="123" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,111 H1652.0" stroke="#ff6644" stroke-width="2" fill="none"/>
+<rect x="220.0" y="111" width="1432.0" height="27" fill="#ff6644" fill-opacity="0.18"/>
+<rect x="220" y="144" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="165" text-anchor="end" fill="#cccccc" font-size="11">ARVALID</text>
+<line x1="220" y1="161" x2="1652" y2="161" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,176 H506.4 V149 H649.6 V176 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="506.4" y="149" width="143.2" height="27" fill="#ff4466" fill-opacity="0.18"/>
+<rect x="220" y="182" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="203" text-anchor="end" fill="#cccccc" font-size="11">ARREADY</text>
+<line x1="220" y1="199" x2="1652" y2="199" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,187 H1652.0" stroke="#44dd88" stroke-width="2" fill="none"/>
+<rect x="220.0" y="187" width="1432.0" height="27" fill="#44dd88" fill-opacity="0.18"/>
+<rect x="220" y="220" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="241" text-anchor="end" fill="#cccccc" font-size="11">ARADDR</text>
+<line x1="220" y1="237" x2="1652" y2="237" stroke="#1e1e30" stroke-width="1"/>
+<polygon points="220.0,237 226.0,225 500.4,225 506.4,237 500.4,252 226.0,252" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="363.2" y="241" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+<polygon points="506.4,237 512.4,225 643.6,225 649.6,237 643.6,252 512.4,252" fill="#bb88ff28" stroke="#bb88ff" stroke-width="1.2"/>
+<text x="578.0" y="241" text-anchor="middle" fill="#bb88ff" font-size="10">0</text>
+<polygon points="649.6,237 655.6,225 1646.0,225 1652.0,237 1646.0,252 655.6,252" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="1150.8" y="241" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+<rect x="220" y="258" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="279" text-anchor="end" fill="#cccccc" font-size="11">hd_hit</text>
+<line x1="220" y1="275" x2="1652" y2="275" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,290 H649.6 V263 H792.8 V290 H1652.0" stroke="#44ff88" stroke-width="2" fill="none"/>
+<rect x="649.6" y="263" width="143.2" height="27" fill="#44ff88" fill-opacity="0.18"/>
+<rect x="220" y="296" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="317" text-anchor="end" fill="#cccccc" font-size="11">resp_en</text>
+<line x1="220" y1="313" x2="1652" y2="313" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,328 H649.6 V301 H792.8 V328 H1652.0" stroke="#ffcc44" stroke-width="2" fill="none"/>
+<rect x="649.6" y="301" width="143.2" height="27" fill="#ffcc44" fill-opacity="0.18"/>
+<rect x="220" y="334" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="355" text-anchor="end" fill="#cccccc" font-size="11">stall</text>
+<line x1="220" y1="351" x2="1652" y2="351" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,366 H1652.0" stroke="#ff8844" stroke-width="2" fill="none"/>
+<rect x="220" y="372" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="393" text-anchor="end" fill="#cccccc" font-size="11">mshr_ARVALID</text>
+<line x1="220" y1="389" x2="1652" y2="389" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,404 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="220" y="410" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="431" text-anchor="end" fill="#cccccc" font-size="11">rresp_valid</text>
+<line x1="220" y1="427" x2="1652" y2="427" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,442 H792.8 V415 H1079.2 V442 H1652.0" stroke="#aaaaff" stroke-width="2" fill="none"/>
+<rect x="792.8" y="415" width="286.4" height="27" fill="#aaaaff" fill-opacity="0.18"/>
+<rect x="220" y="448" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="469" text-anchor="end" fill="#cccccc" font-size="11">RVALID</text>
+<line x1="220" y1="465" x2="1652" y2="465" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,480 H792.8 V453 H1079.2 V480 H1652.0" stroke="#ff4466" stroke-width="2" fill="none"/>
+<rect x="792.8" y="453" width="286.4" height="27" fill="#ff4466" fill-opacity="0.18"/>
+<rect x="220" y="486" width="1432" height="38" fill="#11112200"/>
+<text x="214" y="507" text-anchor="end" fill="#cccccc" font-size="11">RREADY</text>
+<line x1="220" y1="503" x2="1652" y2="503" stroke="#1e1e30" stroke-width="1"/>
+<path d="M220.0,518 H792.8 V491 H1079.2 V518 H1652.0" stroke="#44dd88" stroke-width="2" fill="none"/>
+<rect x="792.8" y="491" width="286.4" height="27" fill="#44dd88" fill-opacity="0.18"/>
+<rect x="220" y="524" width="1432" height="38" fill="#14142a"/>
+<text x="214" y="545" text-anchor="end" fill="#cccccc" font-size="11">RDATA</text>
+<line x1="220" y1="541" x2="1652" y2="541" stroke="#1e1e30" stroke-width="1"/>
+<polygon points="220.0,541 226.0,529 786.8,529 792.8,541 786.8,556 226.0,556" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="506.4" y="545" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+<polygon points="792.8,541 798.8,529 1073.2,529 1079.2,541 1073.2,556 798.8,556" fill="#44cccc28" stroke="#44cccc" stroke-width="1.2"/>
+<text x="936.0" y="545" text-anchor="middle" fill="#44cccc" font-size="10">..0001DEAD0001</text>
+<polygon points="1079.2,541 1085.2,529 1646.0,529 1652.0,541 1646.0,556 1085.2,556" fill="#440000" stroke="#ff2222" stroke-width="1.2"/>
+<text x="1365.6" y="545" text-anchor="middle" fill="#ff2222" font-size="10">X</text>
+</svg>
